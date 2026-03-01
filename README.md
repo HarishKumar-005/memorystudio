@@ -145,11 +145,11 @@ Open the local URL shown in terminal (commonly `http://127.0.0.1:8080`).
 
 ## 11. Screenshots Section
 
-![Screenshot 1](screenshots/copilot-analysing-image-and-defining-ar-position.png)
+![Screenshot 1](screenshots/Screenshot1.png)
 
-![Screenshot 2](screenshots/Copilot-drafted-implementation-plan.png)
+![Screenshot 2](screenshots/Screenshot2.png)
 
-![Screenshot 3](screenshots/copilot-implementing-plan.png)
+![Screenshot 3](screenshots/Screenshot3.png)
 
 ---
 
