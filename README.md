@@ -76,11 +76,11 @@ GitHub Copilot was used throughout development as a productivity and implementat
 
 ### Copilot screenshots
 
-![Copilot Chat Hotspot](screenshots/copilot-chat-hotspot.png)
+![Copilot Implemetation Plan](screenshots/Copilot-drafted-implementation-plan.png)
 
-![Copilot Inline Suggestions](screenshots/copilot-inline.png)
+![Copilot Drafted Plan](screenshots/Copilot-drafted-implementation-plan.png)
 
-![Copilot Serverless Flow](screenshots/copilot-serverless.png)
+![Copilot analyse and updation](screenshots/copilot-analysing-image-and-defining-ar-position.png)
 
 ---
 
