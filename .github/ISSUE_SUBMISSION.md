@@ -35,7 +35,7 @@ I used GitHub Copilot to accelerate implementation and refinement:
 Screenshots/notes are included in README under "Copilot Usage Log".
 
 ## Acceptance Criteria Check
-- [x] AC1: Panorama appears and 3 hotspots are visible/clickable
+- [x] AC1: Panorama appears and 2 hotspots are visible/clickable
 - [x] AC2: "tell me about the cake" triggers programmed response + TTS
 - [x] AC3: Demo video includes room entry, hotspot interactions, agent question, and audio toggle
 - [x] AC4: README includes Copilot usage log and submission instructions
