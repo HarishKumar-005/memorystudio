@@ -8,8 +8,8 @@ MemoryStudio is a mobile-first A-Frame experience where users enter a 360° memo
 
 ## MVP Features
 
-- 360° panorama room using `assets/panorama.jpg`
-- 3 interactive hotspots with image + caption overlay cards
+- 360° panorama room using `assets/panorama.jpg` 
+- 2 interactive hotspots (cake + letter) with image + caption overlay cards
 - Rule-based local agent (`js/agent.js`) with deterministic intent replies
 - Typed chat + Web Speech API voice input (graceful fallback)
 - Speech synthesis narration using browser `speechSynthesis`
@@ -91,7 +91,7 @@ Open: `http://localhost:4173`
 
 1. Open app and verify panorama renders.
 2. Tap `Play Demo`.
-3. Tap each of the 3 hotspots and verify card + narration.
+3. Tap each of the 2 hotspots and verify card + narration.
 4. Type: `tell me about the cake` and verify deterministic response + TTS.
 5. Tap `Speak` and test voice input (if permission/support available).
 6. Toggle `Audio` on/off and verify ambient behavior.
@@ -105,18 +105,26 @@ Open: `http://localhost:4173`
 
 ## Acceptance Criteria Mapping
 
-- AC1: Opening `index.html` shows panorama and 3 clickable hotspots.
+- AC1: Opening `index.html` shows panorama and 2 clickable hotspots.
 - AC2: Input `tell me about the cake` returns pre-programmed agent response and speaks it.
 - AC3: Demo video includes room entry, 2 hotspot interactions, agent question, and audio toggle.
 - AC4: Repo includes README with Copilot usage log and submission instructions.
 
 ## Copilot Usage Log (Required)
 
-Add screenshots and short notes from your implementation workflow.
+Direct screenshot references from the repository:
 
-- `docs/copilot-screenshot-1.png` — Prompt for A-Frame scene + hotspots
-- `docs/copilot-screenshot-2.png` — Prompt for rule-based agent logic
-- `docs/copilot-screenshot-3.png` — Prompt for audio fallback/refinement (optional)
+- A-Frame image analysis + hotspot positioning
+
+![Copilot analyzing image and defining AR/hotspot position](screenshots/copilot-analysing-image-and-defining-ar-position.png)
+
+- Implementation planning with Copilot
+
+![Copilot drafted implementation plan](screenshots/Copilot-drafted-implementation-plan.png)
+
+- Step-by-step implementation assistance
+
+![Copilot implementing the plan](screenshots/copilot-implementing-plan.png)
 
 Template:
 
