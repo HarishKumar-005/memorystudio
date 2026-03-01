@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="MemoryStudio / MemoryRoom - Agent-guided 360° WebXR memory experience" />
+    <title>MemoryStudio / MemoryRoom</title>
+
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- A-Frame core for 360° scene rendering -->
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js" defer></script>
+
+    <!-- Project scripts -->
+    <script src="js/hotspot-component.js" defer></script>
+    <script src="js/audio-ambient.js" defer></script>
+    <script src="js/agent.js" defer></script>
+  </head>
+  <body>
+    <main id="app" class="app" aria-live="polite">
+      <!-- Top instruction overlay -->
+      <section id="helpOverlay" class="overlay overlay-top" aria-label="How to use">
+        <h1 class="title">MemoryStudio / MemoryRoom</h1>
+        <p class="subtitle">
+          Look around the 360° room, tap glowing hotspots, ask the agent by typing or voice, and toggle ambient sound.
+        </p>
+        <button id="playDemoBtn" class="btn btn-primary" type="button" aria-label="Play demo">
+          Play Demo
+        </button>
+      </section>
+
+      <!-- Top right controls -->
+      <section class="overlay overlay-controls" aria-label="Demo controls">
+        <button id="audioToggleBtn" class="btn" type="button" aria-pressed="false">
+          Audio: Off
+        </button>
+        <button id="autoAuthorBtn" class="btn" type="button">
+          Auto-Author (demo)
+        </button>
+      </section>
+
+      <!-- Hotspot card overlay -->
+      <dialog id="hotspotCard" class="overlay overlay-card hidden" aria-labelledby="cardTitle">
+        <button id="closeCardBtn" class="btn btn-close" type="button" aria-label="Close card">×</button>
+        <img id="cardImage" src="" alt="Memory hotspot media" loading="lazy" />
+        <h2 id="cardTitle">Memory</h2>
+        <p id="cardCaption"></p>
+      </dialog>
+
+      <!-- A-Frame 360° scene -->
+      <a-scene
+        id="memoryScene"
+        embedded
+        vr-mode-ui="enabled: true"
+        renderer="colorManagement: true; physicallyCorrectLights: false"
+        background="color: #000000"
+      >
+        <a-assets timeout="8000">
+          <img id="panorama" src="assets/panorama.png" alt="Panorama" />
+        </a-assets>
+
+        <!-- Camera + cursor for mobile tap and desktop ray interactions -->
+        <a-entity id="cameraRig" position="0 1.6 0">
+          <a-camera look-controls="touchEnabled: true; magicWindowTrackingEnabled: true">
+            <a-cursor
+              id="gazeCursor"
+              color="#ffffff"
+              fuse="false"
+              raycaster="objects: .interactive"
+            ></a-cursor>
+          </a-camera>
+        </a-entity>
+
+        <!-- Panorama sphere -->
+        <a-sky src="#panorama" rotation="0 -90 0"></a-sky>
+
+        <!-- Hotspot 1: Cake memory -->
+        <a-entity
+          id="hotspot-cake"
+          class="interactive"
+          geometry="primitive: sphere; radius: 0.16"
+          material="color: #f7d24a; emissive: #f7d24a; emissiveIntensity: 0.8; opacity: 0.95"
+          position="1.8 1.5 -2.8"
+          animation="property: scale; dir: alternate; dur: 900; easing: easeInOutSine; loop: true; to: 1.12 1.12 1.12"
+          hotspot-component="id: cake; title: Birthday Cake; image: assets/photo1.png; caption: The centerpiece cake from a cherished birthday celebration."
+        ></a-entity>
+
+        <!-- Hotspot 2: Family photo -->
+        <a-entity
+          id="hotspot-family"
+          class="interactive"
+          geometry="primitive: sphere; radius: 0.16"
+          material="color: #62d4ff; emissive: #62d4ff; emissiveIntensity: 0.8; opacity: 0.95"
+          position="-2.2 1.45 -2.2"
+          animation="property: scale; dir: alternate; dur: 1000; easing: easeInOutSine; loop: true; to: 1.1 1.1 1.1"
+          hotspot-component="id: family; title: Family Portrait; image: assets/photo2.jpg; caption: A joyful snapshot capturing everyone together in one frame."
+        ></a-entity>
+
+        <!-- Hotspot 3: Letter memory -->
+        <a-entity
+          id="hotspot-letter"
+          class="interactive"
+          geometry="primitive: sphere; radius: 0.16"
+          material="color: #a6ff74; emissive: #a6ff74; emissiveIntensity: 0.8; opacity: 0.95"
+          position="0.1 1.35 3.1"
+          animation="property: scale; dir: alternate; dur: 1100; easing: easeInOutSine; loop: true; to: 1.08 1.08 1.08"
+          hotspot-component="id: letter; title: Handwritten Note; image: assets/photo3.jpg; caption: A handwritten note that carries warmth and shared history."
+        ></a-entity>
+      </a-scene>
+
+      <!-- Bottom chat overlay -->
+      <section id="chatOverlay" class="overlay overlay-bottom" aria-label="Agent chat">
+        <div id="chatLog" class="chat-log" aria-live="polite" aria-label="Conversation log">
+          <p class="msg msg-agent">Agent: Welcome to MemoryRoom. Ask me about the cake, family portrait, or note.</p>
+        </div>
+        <form id="chatForm" class="chat-form" autocomplete="off">
+          <label class="sr-only" for="chatInput">Type a message</label>
+          <input
+            id="chatInput"
+            name="chatInput"
+            type="text"
+            inputmode="text"
+            placeholder="Ask about a memory..."
+            aria-label="Type a message to the agent"
+            maxlength="240"
+          />
+          <button id="sendBtn" class="btn btn-primary" type="submit">Send</button>
+          <button id="speakBtn" class="btn" type="button">Speak</button>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      // Lightweight page-level controller wiring UI to hotspot, agent, and authoring stub.
+      (function () {
+        const els = {
+          helpOverlay: document.getElementById('helpOverlay'),
+          playDemoBtn: document.getElementById('playDemoBtn'),
+          audioToggleBtn: document.getElementById('audioToggleBtn'),
+          autoAuthorBtn: document.getElementById('autoAuthorBtn'),
+          hotspotCard: document.getElementById('hotspotCard'),
+          closeCardBtn: document.getElementById('closeCardBtn'),
+          cardImage: document.getElementById('cardImage'),
+          cardTitle: document.getElementById('cardTitle'),
+          cardCaption: document.getElementById('cardCaption'),
+          chatLog: document.getElementById('chatLog'),
+          chatForm: document.getElementById('chatForm'),
+          chatInput: document.getElementById('chatInput'),
+          speakBtn: document.getElementById('speakBtn')
+        };
+
+        const localRoomSpec = {
+          roomName: 'MemoryRoom Demo',
+          narration: 'Loaded local demo room preset.',
+          panorama: 'assets/panorama.png',
+          hotspots: [
+            {
+              id: 'cake',
+              title: 'Birthday Cake',
+              image: 'assets/photo1.png',
+              caption: 'A sweet centerpiece from the celebration.',
+              position: '1.8 1.5 -2.8'
+            },
+            {
+              id: 'family',
+              title: 'Family Portrait',
+              image: 'assets/photo2.jpg',
+              caption: 'Everyone gathered in a timeless frame.',
+              position: '-2.2 1.45 -2.2'
+            },
+            {
+              id: 'letter',
+              title: 'Handwritten Note',
+              image: 'assets/photo3.jpg',
+              caption: 'A note full of affection and memories.',
+              position: '0.1 1.35 3.1'
+            }
+          ]
+        };
+
+        const speechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        let isListening = false;
+
+        function appendMessage(role, text) {
+          const msg = document.createElement('p');
+          msg.className = `msg msg-${role}`;
+          msg.textContent = `${role === 'user' ? 'You' : 'Agent'}: ${text}`;
+          els.chatLog.appendChild(msg);
+          els.chatLog.scrollTop = els.chatLog.scrollHeight;
+        }
+
+        function speakText(text) {
+          if (!('speechSynthesis' in window)) {
+            return;
+          }
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'en-US';
+          utterance.rate = 1;
+          window.speechSynthesis.speak(utterance);
+        }
+
+        function getAgentReply(input) {
+          if (window.MemoryAgent && typeof window.MemoryAgent.reply === 'function') {
+            return window.MemoryAgent.reply(input);
+          }
+          const normalized = (input || '').trim().toLowerCase();
+          if (normalized.includes('cake')) {
+            return 'That cake marked a joyful birthday, with everyone cheering before the first slice.';
+          }
+          if (normalized.includes('family')) {
+            return 'The family portrait captures a rare moment when everyone could be together.';
+          }
+          if (normalized.includes('note') || normalized.includes('letter')) {
+            return 'The handwritten note reminds us how meaningful simple words can be.';
+          }
+          return 'I can guide you through the cake, family portrait, or handwritten note memories.';
+        }
+
+        function handleUserInput(text) {
+          const cleaned = (text || '').trim();
+          if (!cleaned) {
+            return;
+          }
+          appendMessage('user', cleaned);
+          const reply = getAgentReply(cleaned);
+          appendMessage('agent', reply);
+          speakText(reply);
+        }
+
+        function setListeningState(listening) {
+          isListening = listening;
+          els.speakBtn.textContent = listening ? 'Listening…' : 'Speak';
+          els.speakBtn.setAttribute('aria-pressed', listening ? 'true' : 'false');
+        }
+
+        function initSpeechRecognition() {
+          if (!speechRecognitionCtor) {
+            els.speakBtn.disabled = true;
+            els.speakBtn.title = 'Speech recognition is not available in this browser.';
+            return;
+          }
+
+          recognition = new speechRecognitionCtor();
+          recognition.lang = 'en-US';
+          recognition.interimResults = false;
+          recognition.maxAlternatives = 1;
+
+          recognition.onstart = function () {
+            setListeningState(true);
+          };
+
+          recognition.onresult = function (event) {
+            const transcript = event.results?.[0]?.[0]?.transcript || '';
+            if (transcript) {
+              handleUserInput(transcript);
+            }
+          };
+
+          recognition.onerror = function () {
+            appendMessage('agent', 'Voice input is unavailable right now. You can keep using typed chat.');
+          };
+
+          recognition.onend = function () {
+            setListeningState(false);
+          };
+        }
+
+        function openCard(payload) {
+          els.cardTitle.textContent = payload.title || 'Memory';
+          els.cardCaption.textContent = payload.caption || '';
+          els.cardImage.src = payload.image || '';
+          els.cardImage.alt = payload.title || 'Memory image';
+          els.hotspotCard.classList.remove('hidden');
+          if (typeof els.hotspotCard.showModal === 'function' && !els.hotspotCard.open) {
+            els.hotspotCard.showModal();
+          }
+
+          if (payload.title) {
+            const narrated = `Now highlighting ${payload.title}. ${payload.caption || ''}`;
+            appendMessage('agent', narrated);
+            speakText(narrated);
+          }
+        }
+
+        function applyRoomSpec(spec) {
+          if (!spec || typeof spec !== 'object') {
+            return;
+          }
+
+          if (typeof spec.panorama === 'string' && spec.panorama.trim()) {
+            const panoramaAsset = document.getElementById('panorama');
+            if (panoramaAsset) {
+              panoramaAsset.setAttribute('src', spec.panorama);
+            }
+          }
+
+          const hotspots = Array.isArray(spec.hotspots) ? spec.hotspots : [];
+          hotspots.forEach(function (hotspot) {
+            if (!hotspot || typeof hotspot !== 'object') {
+              return;
+            }
+
+            const target = document.getElementById(`hotspot-${hotspot.id}`);
+            if (!target) {
+              return;
+            }
+
+            if (typeof hotspot.position === 'string' && hotspot.position.trim()) {
+              target.setAttribute('position', hotspot.position);
+            }
+
+            const current = target.getAttribute('hotspot-component') || {};
+            target.setAttribute('hotspot-component', {
+              id: hotspot.id || current.id || '',
+              title: hotspot.title || current.title || 'Memory',
+              image: hotspot.image || current.image || '',
+              caption: hotspot.caption || current.caption || ''
+            });
+          });
+        }
+
+        async function runAutoAuthor() {
+          els.autoAuthorBtn.disabled = true;
+          const previousLabel = els.autoAuthorBtn.textContent;
+          els.autoAuthorBtn.textContent = 'Loading…';
+          try {
+            const response = await fetch('/api/author-room', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ prompt: 'Create a warm family memory room.' })
+            });
+
+            if (!response.ok) {
+              throw new Error(`Endpoint unavailable (${response.status})`);
+            }
+
+            const data = await response.json();
+            applyRoomSpec(data);
+            const summary = data?.narration || 'Auto-authored room loaded from endpoint.';
+            appendMessage('agent', summary);
+            speakText(summary);
+          } catch (error) {
+            console.warn('Auto-author endpoint unavailable, using local fallback:', error);
+            applyRoomSpec(localRoomSpec);
+            const fallbackMessage = localRoomSpec.narration;
+            appendMessage('agent', `${fallbackMessage} (Local fallback)`);
+            speakText(`${fallbackMessage} Local fallback is active.`);
+          } finally {
+            els.autoAuthorBtn.disabled = false;
+            els.autoAuthorBtn.textContent = previousLabel;
+          }
+        }
+
+        function initEvents() {
+          document.addEventListener('memory:hotspot-open', function (event) {
+            openCard(event.detail || {});
+          });
+
+          els.playDemoBtn.addEventListener('click', function () {
+            els.helpOverlay.classList.add('hidden');
+            if (window.MemoryAudio && typeof window.MemoryAudio.userActivated === 'function') {
+              window.MemoryAudio.userActivated();
+            }
+          });
+
+          els.closeCardBtn.addEventListener('click', function () {
+            if (typeof els.hotspotCard.close === 'function' && els.hotspotCard.open) {
+              els.hotspotCard.close();
+            }
+            els.hotspotCard.classList.add('hidden');
+          });
+
+          els.chatForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            handleUserInput(els.chatInput.value);
+            els.chatInput.value = '';
+            els.chatInput.focus();
+          });
+
+          els.speakBtn.addEventListener('click', function () {
+            if (!recognition) {
+              appendMessage('agent', 'Voice input is not supported here. Type your message instead.');
+              return;
+            }
+            if (isListening) {
+              recognition.stop();
+              return;
+            }
+            recognition.start();
+          });
+
+          els.audioToggleBtn.addEventListener('click', async function () {
+            if (!window.MemoryAudio || typeof window.MemoryAudio.toggle !== 'function') {
+              appendMessage('agent', 'Ambient audio module not loaded yet.');
+              return;
+            }
+            const enabled = await window.MemoryAudio.toggle();
+            els.audioToggleBtn.textContent = `Audio: ${enabled ? 'On' : 'Off'}`;
+            els.audioToggleBtn.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+          });
+
+          els.autoAuthorBtn.addEventListener('click', runAutoAuthor);
+        }
+
+        initSpeechRecognition();
+        initEvents();
+      })();
+    </script>
+  </body>
+</html>

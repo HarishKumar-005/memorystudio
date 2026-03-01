@@ -1,0 +1,242 @@
+:root {
+  color-scheme: dark;
+  --bg-overlay: rgba(10, 12, 18, 0.7);
+  --bg-card: rgba(10, 12, 18, 0.92);
+  --text: #f3f5f8;
+  --muted: #c7cfda;
+  --accent: #4ec2ff;
+  --accent-strong: #1da7ee;
+  --danger: #ff6b6b;
+  --ring: rgba(78, 194, 255, 0.45);
+  --radius: 14px;
+  --shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  background: #02050a;
+  color: var(--text);
+  overflow: hidden;
+}
+
+a-scene {
+  width: 100vw;
+  height: 100vh;
+}
+
+.app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.overlay {
+  position: absolute;
+  z-index: 20;
+  background: var(--bg-overlay);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.overlay-top {
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  left: 10px;
+  right: 10px;
+  padding: 12px 14px;
+}
+
+.overlay-controls {
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  right: 10px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+}
+
+.overlay-card {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(92vw, 420px);
+  padding: 12px;
+  background: var(--bg-card);
+}
+
+.overlay-card img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  margin-top: 4px;
+}
+
+.overlay-card h2 {
+  margin: 10px 0 6px;
+  font-size: 1rem;
+}
+
+.overlay-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.4;
+  font-size: 0.95rem;
+}
+
+.overlay-bottom {
+  left: 10px;
+  right: 10px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+  padding: 10px;
+}
+
+.title {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.subtitle {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.chat-log {
+  max-height: 22vh;
+  overflow: auto;
+  margin-bottom: 8px;
+  display: grid;
+  gap: 6px;
+  padding-right: 2px;
+}
+
+.msg {
+  margin: 0;
+  padding: 7px 9px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.msg-agent {
+  background: rgba(29, 167, 238, 0.14);
+}
+
+.msg-user {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.chat-form {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+}
+
+#chatInput {
+  min-height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0 10px;
+  font-size: 0.95rem;
+}
+
+#chatInput::placeholder {
+  color: rgba(243, 245, 248, 0.65);
+}
+
+.btn {
+  min-height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.btn-primary {
+  border-color: transparent;
+  background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+  color: #021018;
+}
+
+.btn-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 34px;
+  min-height: 34px;
+  border-radius: 999px;
+  padding: 0;
+  line-height: 1;
+  font-size: 1.1rem;
+  background: rgba(255, 107, 107, 0.2);
+  border-color: rgba(255, 107, 107, 0.5);
+}
+
+.btn:focus-visible,
+#chatInput:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+@media (min-width: 768px) {
+  .overlay-top {
+    left: 16px;
+    right: auto;
+    width: min(520px, 58vw);
+    padding: 14px 16px;
+  }
+
+  .overlay-controls {
+    right: 16px;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .overlay-bottom {
+    left: 16px;
+    right: 16px;
+    max-width: 840px;
+    margin: 0 auto;
+  }
+
+  .chat-log {
+    max-height: 26vh;
+  }
+}

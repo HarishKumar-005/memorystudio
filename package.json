@@ -1,0 +1,13 @@
+{
+  "name": "agentsleague-memorystudio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MemoryStudio / MemoryRoom - A-Frame 360 WebXR demo with offline-safe rule-based agent",
+  "scripts": {
+    "dev": "serve . -l 4173",
+    "start": "serve . -l 4173"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}
