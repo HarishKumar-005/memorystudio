@@ -25,19 +25,19 @@ export default async function handler(req, res) {
     style: normalized.includes('cozy') ? 'cozy-evening' : 'warm-family',
     narration:
       'Auto-authored demo room loaded. This is a deterministic local stub response with no external model calls.',
-    panorama: 'assets/panorama.jpg',
+    panorama: 'assets/panorama.png',
     hotspots: [
       {
         id: 'cake',
         title: 'Birthday Cake',
-        image: 'assets/photo1.jpg',
+        image: 'assets/photo1.png',
         caption: 'A celebration centerpiece lit with candles and shared joy.',
-        position: '1.25 1.46 -3.35'
+        position: '0.2 1.7 -3.30'
       },
       {
         id: 'letter',
         title: 'Handwritten Note',
-        image: 'assets/photo3.jpg',
+        image: 'assets/photo3.png',
         caption: 'A heartfelt note that preserves personal memory in words.',
         position: '1.95 1.18 -3.05'
       }

@@ -2,58 +2,55 @@
 
 Agent-guided 360° WebXR memory experience for Creative Apps — Agents League.
 
-## What this is
+## Purpose
 
-MemoryStudio is a mobile-first A-Frame experience where users enter a 360° memory room, tap hotspots, and interact with an on-device rule-based agent using typed chat or voice input. Ambient procedural audio can be toggled on/off, and an optional serverless demo endpoint can auto-author a deterministic room JSON.
+MemoryStudio demonstrates a polished, mobile-first 360° memory room where users can explore an immersive scene, interact with meaningful hotspots, and talk to a local on-device agent. The project is intentionally reliable for demos: no API keys, no external LLM dependency, and deterministic fallback behavior.
 
-## MVP Features
+## Final Scope (Submission Build)
 
-- 360° panorama room using `assets/panorama.jpg` 
-- 2 interactive hotspots (cake + letter) with image + caption overlay cards
-- Rule-based local agent (`js/agent.js`) with deterministic intent replies
-- Typed chat + Web Speech API voice input (graceful fallback)
-- Speech synthesis narration using browser `speechSynthesis`
-- Procedural ambient audio toggle (`js/audio-ambient.js`)
-- Optional deterministic authoring stub (`api/author-room.js`) with no external API calls
-- No API keys, no secrets
+- 360° A-Frame panorama scene
+- 2 interactive hotspots: **Birthday Cake** and **Handwritten Note**
+- Rule-based local agent for typed/voice prompts
+- Browser TTS narration for responses and hotspot highlights
+- Ambient procedural audio toggle
+- Optional deterministic `/api/author-room` serverless stub with client fallback
 
-## Tech Stack
+## Features
 
-- HTML/CSS/JavaScript
-- A-Frame (WebXR scene framework)
-- Web Speech API (speech recognition where supported)
-- Speech Synthesis API (TTS)
-- Web Audio API (ambient loop)
+- **Immersive Scene:** 360° environment using `a-sky` in `index.html`
+- **Hotspot Interactions:** tap hotspot to open image + caption card and trigger narration
+- **Agent Chat:** deterministic replies from `js/agent.js` for cake/note intents
+- **Speech Support:** Web Speech API input when available, typed fallback always works
+- **Audio Control:** ambient audio starts only after user interaction and can be toggled
+- **Auto-Author Demo:** attempts `/api/author-room`, falls back to local room spec if unavailable
 
 ## Project Structure
 
-- `PRD.md`
-- `README.md`
-- `index.html`
-- `styles.css`
-- `js/agent.js`
-- `js/hotspot-component.js`
-- `js/audio-ambient.js`
-- `api/author-room.js`
-- `_redirects`
-- `package.json`
-- `demo-recording-instructions.txt`
-- `.github/ISSUE_SUBMISSION.md`
-- `LICENSE`
+- `index.html` — scene, UI overlays, interaction wiring
+- `styles.css` — responsive mobile-first styles
+- `js/hotspot-component.js` — hotspot behavior component
+- `js/agent.js` — rule-based on-device agent logic
+- `js/audio-ambient.js` — procedural ambient audio engine
+- `api/author-room.js` — deterministic serverless room JSON stub
+- `assets/` — panorama and hotspot card images
+- `screenshots/` — Copilot usage screenshots
+- `.github/ISSUE_SUBMISSION.md` — issue text template for Agents League
+- `demo-recording-instructions.txt` — demo capture checklist
 
-## Required Assets
+## Required Assets (Current Implementation)
 
-Add these files to `assets/`:
+Place these exact files in `assets/`:
 
-- `panorama.jpg` (2:1 equirectangular, ~2048x1024 to 4096x2048, optimized ~1–3 MB)
-- `photo1.jpg`
-- `photo2.jpg`
-- `photo3.jpg`
-- `small-thumbnail1.webp`
+- `panorama.png` (2:1 equirectangular, optimized for mobile)
+- `photo1.png` (cake card image)
+- `photo3.png` (letter card image)
+
+Optional extras (not required by current runtime):
+
 - `click.wav`
-- `ambient_loop_hint.mp3` (optional reference asset)
+- `ambient_loop_hint.mp3`
 
-## Local Run
+## How to Run
 
 ### Option A: Python static server
 
@@ -61,7 +58,7 @@ Add these files to `assets/`:
 python -m http.server 8080
 ```
 
-Open: `http://localhost:8080`
+Open `http://localhost:8080`.
 
 ### Option B: npm script
 
@@ -70,87 +67,74 @@ npm install
 npm run dev
 ```
 
-Open: `http://localhost:4173`
+Open `http://localhost:4173`.
 
-## Deploy
+## How to Use the App
+
+1. Open the app and tap **Play Demo**.
+2. Look around the room and tap the **cake** and **letter** hotspots.
+3. Use chat input (or **Speak** if supported) to ask about memories.
+4. Toggle **Audio: On/Off** for ambient sound.
+5. Tap **Auto-Author (demo)** to load serverless room config or local fallback.
+
+## Button Behavior (Judge-Friendly)
+
+- **Play Demo:** hides onboarding overlay and unlocks browser audio context after user gesture.
+- **Audio Toggle:** turns ambient procedural audio on/off.
+- **Speak:** starts speech recognition when browser/device supports it.
+- **Auto-Author (demo):** fetches `/api/author-room`; if unavailable, applies local deterministic room spec.
+
+## Deployment Notes
 
 ### Vercel (recommended)
 
-- Deploy repo as-is.
-- `api/author-room.js` is served as a serverless function at `/api/author-room`.
+- Deploy repository directly.
+- `api/author-room.js` is available at `/api/author-room`.
 
-### Netlify
-
-- Static UI deploys directly.
-- `_redirects` includes SPA fallback and `/api/*` passthrough rule.
-- If no function exists on Netlify, `Auto-Author (demo)` gracefully falls back to built-in local deterministic JSON.
 
 ## Manual Test Plan
 
-### Mobile (Chrome on Samsung S21 FE)
+### Mobile (Chrome)
 
-1. Open app and verify panorama renders.
-2. Tap `Play Demo`.
-3. Tap each of the 2 hotspots and verify card + narration.
-4. Type: `tell me about the cake` and verify deterministic response + TTS.
-5. Tap `Speak` and test voice input (if permission/support available).
-6. Toggle `Audio` on/off and verify ambient behavior.
-7. Tap `Auto-Author (demo)` and verify endpoint response or local fallback message.
+1. Verify panorama loads quickly and interactions remain smooth.
+2. Tap **Play Demo** and confirm overlay hides.
+3. Tap both hotspots and verify card + narration.
+4. Type `tell me about the cake` and verify deterministic response + TTS.
+5. Test **Speak** (if supported/permission granted).
+6. Toggle **Audio** on/off and verify behavior.
+7. Tap **Auto-Author (demo)** and verify endpoint/fallback message.
 
 ### Desktop (Chrome)
 
-1. Verify scene interaction and hotspot clicks.
-2. Verify typed chat and TTS.
-3. Verify microphone prompt and speech fallback behavior.
+1. Verify hotspot interactions and overlay behavior.
+2. Verify typed chat and narration.
+3. Verify speech fallback behavior when recognition is unavailable.
 
 ## Acceptance Criteria Mapping
 
-- AC1: Opening `index.html` shows panorama and 2 clickable hotspots.
-- AC2: Input `tell me about the cake` returns pre-programmed agent response and speaks it.
-- AC3: Demo video includes room entry, 2 hotspot interactions, agent question, and audio toggle.
-- AC4: Repo includes README with Copilot usage log and submission instructions.
+- **AC1:** `index.html` renders panorama + 2 clickable hotspots.
+- **AC2:** `tell me about the cake` returns programmed rule-based response and speaks it.
+- **AC3:** Demo video includes room entry, 2 hotspot interactions, agent question, and audio toggle.
+- **AC4:** Repository includes clear README, Copilot usage evidence, and submission instructions.
 
-## Copilot Usage Log (Required)
+## Copilot Usage Evidence
 
-Direct screenshot references from the repository:
-
-- A-Frame image analysis + hotspot positioning
+### 1) Image analysis + hotspot placement
 
 ![Copilot analyzing image and defining AR/hotspot position](screenshots/copilot-analysing-image-and-defining-ar-position.png)
 
-- Implementation planning with Copilot
+### 2) Implementation planning
 
 ![Copilot drafted implementation plan](screenshots/Copilot-drafted-implementation-plan.png)
 
-- Step-by-step implementation assistance
+### 3) Guided implementation
 
 ![Copilot implementing the plan](screenshots/copilot-implementing-plan.png)
 
-Template:
-
-1. **Prompt goal:**
-2. **Copilot suggestion summary:**
-3. **What you accepted/edited and why:**
-4. **Outcome:**
-
-## Suggested Commit Sequence
-
-- `feat: scaffold MemoryStudio core WebXR scene and overlays`
-- `feat: add hotspot interactions, rule-based agent, and ambient audio toggle`
-- `feat: add deterministic author-room serverless stub with fallback`
-- `docs: add README, test plan, copilot usage log placeholders, and submission template`
-- `chore: add license and optional local dev scripts`
-
 ## Security & Privacy
 
-- No API keys or secrets are included.
-- No personal data is persisted server-side.
-- Authoring endpoint returns deterministic sample JSON only.
+- No API keys or secrets are committed.
+- No external LLM calls are required.
+- Author-room endpoint returns deterministic sample JSON only.
 
-## Demo Recording Checklist
 
-See `demo-recording-instructions.txt`.
-
-## Submission
-
-Use `.github/ISSUE_SUBMISSION.md` as the exact issue text to paste into `microsoft/agentsleague`.
