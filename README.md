@@ -1,140 +1,175 @@
-# MemoryStudio / MemoryRoom
+# MemoryStudio — Agent-Guided 360° WebXR Experience
 
-Agent-guided 360° WebXR memory experience for Creative Apps — Agents League.
+![MemoryStudio Banner](assets/panorama.png)
 
-## Purpose
+*An immersive 360° WebXR memory room built using GitHub Copilot*
 
-MemoryStudio demonstrates a polished, mobile-first 360° memory room where users can explore an immersive scene, interact with meaningful hotspots, and talk to a local on-device agent. The project is intentionally reliable for demos: no API keys, no external LLM dependency, and deterministic fallback behavior.
+---
 
-## Final Scope (Submission Build)
+## 1. Project Title and Banner
 
-- 360° A-Frame panorama scene
-- 2 interactive hotspots: **Birthday Cake** and **Handwritten Note**
-- Rule-based local agent for typed/voice prompts
-- Browser TTS narration for responses and hotspot highlights
-- Ambient procedural audio toggle
-- Optional deterministic `/api/author-room` serverless stub with client fallback
+MemoryStudio is a creative, agent-guided WebXR experience designed for immersive storytelling in a 360° memory room.
 
-## Features
+---
 
-- **Immersive Scene:** 360° environment using `a-sky` in `index.html`
-- **Hotspot Interactions:** tap hotspot to open image + caption card and trigger narration
-- **Agent Chat:** deterministic replies from `js/agent.js` for cake/note intents
-- **Speech Support:** Web Speech API input when available, typed fallback always works
-- **Audio Control:** ambient audio starts only after user interaction and can be toggled
-- **Auto-Author Demo:** attempts `/api/author-room`, falls back to local room spec if unavailable
+## 2. Demo Preview
 
-## Project Structure
+- **Demo Video:** https://youtube.com/shorts/yqQKQ9VEwCA  
+- **Screenshots:** https://github.com/HarishKumar-005/memorystudio/tree/main/screenshots  
+- **Live Demo:** https://memorystudio-ar.vercel.app
 
-- `index.html` — scene, UI overlays, interaction wiring
-- `styles.css` — responsive mobile-first styles
-- `js/hotspot-component.js` — hotspot behavior component
-- `js/agent.js` — rule-based on-device agent logic
-- `js/audio-ambient.js` — procedural ambient audio engine
-- `api/author-room.js` — deterministic serverless room JSON stub
-- `assets/` — panorama and hotspot card images
-- `screenshots/` — Copilot usage screenshots
-- `.github/ISSUE_SUBMISSION.md` — issue text template for Agents League
-- `demo-recording-instructions.txt` — demo capture checklist
+---
 
-## Required Assets (Current Implementation)
+## 3. Project Overview
 
-Place these exact files in `assets/`:
+MemoryStudio is a browser-based 360° WebXR application where users can explore a memory room, interact with key objects, and receive context-aware narration from an on-device agent via text and voice.
 
-- `panorama.png` (2:1 equirectangular, optimized for mobile)
-- `photo1.png` (cake card image)
-- `photo3.png` (letter card image)
+### What the project is
+- A mobile-first immersive memory experience built with A-Frame.
+- A deterministic, rule-based agent system for reliable behavior during demos.
 
-Optional extras (not required by current runtime):
+### What problem it solves
+- Many XR demos depend on external APIs and unstable network calls.
+- Contest demos can fail when keys, model endpoints, or latency issues occur.
 
-- `click.wav`
-- `ambient_loop_hint.mp3`
+### Why it is useful
+- Delivers a stable, low-friction interactive experience for judges and users.
+- Works without API keys and is designed for consistent behavior.
 
-## How to Run
+### How it demonstrates GitHub Copilot usage
+- Copilot was used to scaffold UI structure, interaction logic, and modular JavaScript components.
+- Copilot accelerated iterative refinement of hotspots, speech handling, and serverless stubs.
 
-### Option A: Python static server
+---
 
-```bash
-python -m http.server 8080
+## 4. Features
+
+- 360° immersive WebXR environment
+- Interactive memory hotspots
+- Voice and text AI agent
+- Offline-safe architecture
+- Procedural ambient audio
+- Auto-Author feature
+
+---
+
+## 5. GitHub Copilot Usage
+
+GitHub Copilot was used throughout development as a productivity and implementation assistant.
+
+### How Copilot was used during development
+- Generated initial scene structure and UI overlays.
+- Suggested event wiring for hotspot interactions and card rendering.
+- Helped draft fallback-safe speech and chat flow logic.
+- Assisted with deterministic serverless endpoint scaffolding.
+
+### How Copilot helped generate components
+- A-Frame scene composition blocks
+- Hotspot behavior integration
+- Agent response scaffolding
+- Client-side UI state wiring
+
+### How Copilot improved productivity
+- Reduced boilerplate coding time for repeated patterns.
+- Accelerated prototyping and refinement cycles.
+- Improved implementation speed while keeping modular code structure.
+
+### Copilot screenshots
+
+![Copilot Chat Hotspot](screenshots/copilot-chat-hotspot.png)
+
+![Copilot Inline Suggestions](screenshots/copilot-inline.png)
+
+![Copilot Serverless Flow](screenshots/copilot-serverless.png)
+
+---
+
+## 6. Technology Stack
+
+- GitHub Copilot
+- A-Frame WebXR
+- JavaScript
+- HTML5 / CSS3
+- Web Speech API
+- Web Audio API
+- Vercel Serverless Functions
+
+---
+
+## 7. Project Structure
+
+```text
+index.html
+styles.css
+js/
+assets/
+api/
+screenshots/
 ```
 
-Open `http://localhost:8080`.
+---
 
-### Option B: npm script
+## 8. Setup Instructions
 
 ```bash
-npm install
-npm run dev
+git clone <repo-url>
+cd <repo-folder>
+npx http-server .
 ```
 
-Open `http://localhost:4173`.
+Open the local URL shown in terminal (commonly `http://127.0.0.1:8080`).
 
-## How to Use the App
+- No environment variables required.
+- No API keys required.
 
-1. Open the app and tap **Play Demo**.
-2. Look around the room and tap the **cake** and **letter** hotspots.
-3. Use chat input (or **Speak** if supported) to ask about memories.
-4. Toggle **Audio: On/Off** for ambient sound.
-5. Tap **Auto-Author (demo)** to load serverless room config or local fallback.
+---
 
-## Button Behavior (Judge-Friendly)
+## 9. How to Use
 
-- **Play Demo:** hides onboarding overlay and unlocks browser audio context after user gesture.
-- **Audio Toggle:** turns ambient procedural audio on/off.
-- **Speak:** starts speech recognition when browser/device supports it.
-- **Auto-Author (demo):** fetches `/api/author-room`; if unavailable, applies local deterministic room spec.
+1. Enter the room by clicking **Play Demo**.
+2. Click/tap hotspots to view memory cards.
+3. Use chat to ask about the memory objects.
+4. Use voice input where browser support is available.
+5. Use **Auto-Author (demo)** to load deterministic room JSON.
 
-## Deployment Notes
+---
 
-### Vercel (recommended)
+## 10. Technical Architecture
 
-- Deploy repository directly.
-- `api/author-room.js` is available at `/api/author-room`.
+- **A-Frame rendering:** panorama and interactive entities rendered in a 360° scene.
+- **Rule-based agent:** deterministic local intent matching for stable responses.
+- **Speech system:** Web Speech API (input) + Speech Synthesis (output).
+- **Asset loading:** static assets served from `assets/` with no external secret dependencies.
 
+---
 
-## Manual Test Plan
+## 11. Screenshots Section
 
-### Mobile (Chrome)
+![Screenshot 1](screenshots/copilot-analysing-image-and-defining-ar-position.png)
 
-1. Verify panorama loads quickly and interactions remain smooth.
-2. Tap **Play Demo** and confirm overlay hides.
-3. Tap both hotspots and verify card + narration.
-4. Type `tell me about the cake` and verify deterministic response + TTS.
-5. Test **Speak** (if supported/permission granted).
-6. Toggle **Audio** on/off and verify behavior.
-7. Tap **Auto-Author (demo)** and verify endpoint/fallback message.
+![Screenshot 2](screenshots/Copilot-drafted-implementation-plan.png)
 
-### Desktop (Chrome)
+![Screenshot 3](screenshots/copilot-implementing-plan.png)
 
-1. Verify hotspot interactions and overlay behavior.
-2. Verify typed chat and narration.
-3. Verify speech fallback behavior when recognition is unavailable.
+---
 
-## Acceptance Criteria Mapping
+## 12. Submission Information
 
-- **AC1:** `index.html` renders panorama + 2 clickable hotspots.
-- **AC2:** `tell me about the cake` returns programmed rule-based response and speaks it.
-- **AC3:** Demo video includes room entry, 2 hotspot interactions, agent question, and audio toggle.
-- **AC4:** Repository includes clear README, Copilot usage evidence, and submission instructions.
+- Microsoft Agents League 2026
+- Creative Apps Track
+- Built using GitHub Copilot
 
-## Copilot Usage Evidence
+---
 
-### 1) Image analysis + hotspot placement
+## 13. License
 
-![Copilot analyzing image and defining AR/hotspot position](screenshots/copilot-analysing-image-and-defining-ar-position.png)
+MIT License
 
-### 2) Implementation planning
+---
 
-![Copilot drafted implementation plan](screenshots/Copilot-drafted-implementation-plan.png)
+## 14. Author Section
 
-### 3) Guided implementation
-
-![Copilot implementing the plan](screenshots/copilot-implementing-plan.png)
-
-## Security & Privacy
-
-- No API keys or secrets are committed.
-- No external LLM calls are required.
-- Author-room endpoint returns deterministic sample JSON only.
+- **Harish Kumar S P** — GitHub: `@HarishKumar-005`
+- **Akshaya S** — GitHub: `@akshaya12406-byte`
 
 
