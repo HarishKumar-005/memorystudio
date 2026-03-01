@@ -7,12 +7,6 @@
         'The cake marks a birthday celebration where everyone gathered, laughed, and made wishes before the first slice.'
     },
     {
-      id: 'family',
-      test: /\bfamily|portrait|photo\b/i,
-      reply:
-        'That family portrait captures a rare moment of everyone together, and it anchors the room with warmth.'
-    },
-    {
       id: 'letter',
       test: /\bletter|note|handwritten|message\b/i,
       reply:
@@ -22,7 +16,7 @@
       id: 'help',
       test: /\bhelp|what can you do|commands\b/i,
       reply:
-        'You can ask me about the cake, family portrait, or handwritten note. You can also tap any hotspot to hear narration.'
+        'You can ask me about the cake or handwritten note. You can also tap either hotspot to hear narration.'
     }
   ];
 
@@ -43,7 +37,7 @@
       }
     }
 
-    return 'I can help with the cake, family portrait, or handwritten note memories. Try asking about one of those.';
+    return 'I can help with the cake or handwritten note memories. Try asking about one of those.';
   }
 
   window.MemoryAgent = {

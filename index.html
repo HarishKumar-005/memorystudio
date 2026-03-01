@@ -74,35 +74,24 @@
         <!-- Panorama sphere -->
         <a-sky src="#panorama" rotation="0 -90 0"></a-sky>
 
-        <!-- Hotspot 1: Cake memory -->
+        <!-- Hotspot 1: Cake memory (center table cake) -->
         <a-entity
           id="hotspot-cake"
           class="interactive"
           geometry="primitive: sphere; radius: 0.16"
           material="color: #f7d24a; emissive: #f7d24a; emissiveIntensity: 0.8; opacity: 0.95"
-          position="1.8 1.5 -2.8"
+          position="1.25 1.46 -3.35"
           animation="property: scale; dir: alternate; dur: 900; easing: easeInOutSine; loop: true; to: 1.12 1.12 1.12"
           hotspot-component="id: cake; title: Birthday Cake; image: assets/photo1.png; caption: The centerpiece cake from a cherished birthday celebration."
         ></a-entity>
 
-        <!-- Hotspot 2: Family photo -->
-        <a-entity
-          id="hotspot-family"
-          class="interactive"
-          geometry="primitive: sphere; radius: 0.16"
-          material="color: #62d4ff; emissive: #62d4ff; emissiveIntensity: 0.8; opacity: 0.95"
-          position="-2.2 1.45 -2.2"
-          animation="property: scale; dir: alternate; dur: 1000; easing: easeInOutSine; loop: true; to: 1.1 1.1 1.1"
-          hotspot-component="id: family; title: Family Portrait; image: assets/photo2.jpg; caption: A joyful snapshot capturing everyone together in one frame."
-        ></a-entity>
-
-        <!-- Hotspot 3: Letter memory -->
+        <!-- Hotspot 2: Letter memory (note on table right of cake) -->
         <a-entity
           id="hotspot-letter"
           class="interactive"
           geometry="primitive: sphere; radius: 0.16"
           material="color: #a6ff74; emissive: #a6ff74; emissiveIntensity: 0.8; opacity: 0.95"
-          position="0.1 1.35 3.1"
+          position="1.95 1.18 -3.05"
           animation="property: scale; dir: alternate; dur: 1100; easing: easeInOutSine; loop: true; to: 1.08 1.08 1.08"
           hotspot-component="id: letter; title: Handwritten Note; image: assets/photo3.jpg; caption: A handwritten note that carries warmth and shared history."
         ></a-entity>
@@ -111,7 +100,7 @@
       <!-- Bottom chat overlay -->
       <section id="chatOverlay" class="overlay overlay-bottom" aria-label="Agent chat">
         <div id="chatLog" class="chat-log" aria-live="polite" aria-label="Conversation log">
-          <p class="msg msg-agent">Agent: Welcome to MemoryRoom. Ask me about the cake, family portrait, or note.</p>
+          <p class="msg msg-agent">Agent: Welcome to MemoryRoom. Ask me about the cake or handwritten note.</p>
         </div>
         <form id="chatForm" class="chat-form" autocomplete="off">
           <label class="sr-only" for="chatInput">Type a message</label>
@@ -159,21 +148,14 @@
               title: 'Birthday Cake',
               image: 'assets/photo1.png',
               caption: 'A sweet centerpiece from the celebration.',
-              position: '1.8 1.5 -2.8'
-            },
-            {
-              id: 'family',
-              title: 'Family Portrait',
-              image: 'assets/photo2.jpg',
-              caption: 'Everyone gathered in a timeless frame.',
-              position: '-2.2 1.45 -2.2'
+              position: '1.25 1.46 -3.35'
             },
             {
               id: 'letter',
               title: 'Handwritten Note',
               image: 'assets/photo3.jpg',
               caption: 'A note full of affection and memories.',
-              position: '0.1 1.35 3.1'
+              position: '1.95 1.18 -3.05'
             }
           ]
         };
@@ -209,13 +191,10 @@
           if (normalized.includes('cake')) {
             return 'That cake marked a joyful birthday, with everyone cheering before the first slice.';
           }
-          if (normalized.includes('family')) {
-            return 'The family portrait captures a rare moment when everyone could be together.';
-          }
           if (normalized.includes('note') || normalized.includes('letter')) {
             return 'The handwritten note reminds us how meaningful simple words can be.';
           }
-          return 'I can guide you through the cake, family portrait, or handwritten note memories.';
+          return 'I can guide you through the cake or handwritten note memories.';
         }
 
         function handleUserInput(text) {

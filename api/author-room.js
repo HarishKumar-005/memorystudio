@@ -32,21 +32,14 @@ export default async function handler(req, res) {
         title: 'Birthday Cake',
         image: 'assets/photo1.jpg',
         caption: 'A celebration centerpiece lit with candles and shared joy.',
-        position: '1.8 1.5 -2.8'
-      },
-      {
-        id: 'family',
-        title: 'Family Portrait',
-        image: 'assets/photo2.jpg',
-        caption: 'A timeless portrait capturing everyone together.',
-        position: '-2.2 1.45 -2.2'
+        position: '1.25 1.46 -3.35'
       },
       {
         id: 'letter',
         title: 'Handwritten Note',
         image: 'assets/photo3.jpg',
         caption: 'A heartfelt note that preserves personal memory in words.',
-        position: '0.1 1.35 3.1'
+        position: '1.95 1.18 -3.05'
       }
     ],
     meta: {
